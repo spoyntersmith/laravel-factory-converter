@@ -1,0 +1,42 @@
+{
+    "name": "rdh/laravel-factory-converter",
+    "description": "Convert your old Laravel factories to the new version 8 classes",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rolfdenhartog",
+            "email": "rolf@rolfdenhartog.nl"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "ext-json": "*",
+        "symfony/console": "^5.1",
+        "symfony/finder": "^5.1",
+        "symfony/templating": "^5.1",
+        "symfony/process": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3",
+        "rdh/php-cs-fixer": "^1.2",
+        "symfony/var-dumper": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rdh\\LaravelFactoryConverter\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rdh\\LaravelFactoryConverterTests\\": "tests/"
+        }
+    },
+    "bin": [
+        "laravel-factory-converter"
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,7 @@
+<phpunit bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="this-is-a-required-field-which-contains-this-long-value">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
