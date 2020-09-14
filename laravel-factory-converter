@@ -26,5 +26,5 @@ require_once $path;
 
 $application = new Application();
 $application->add($command = new ConvertCommand());
-$application->setDefaultCommand($command->getName());
+$application->setDefaultCommand($command->getName(), true);
 $application->run();
