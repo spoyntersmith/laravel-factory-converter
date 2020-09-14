@@ -4,7 +4,25 @@
 use Rdh\LaravelFactoryConverter\Commands\ConvertCommand;
 use Symfony\Component\Console\Application;
 
-require_once __DIR__ . '/vendor/autoload.php';
+$possiblePaths = [
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/vendor/autoload.php',
+];
+
+foreach ($possiblePaths as $possiblePath) {
+    if (file_exists($possiblePath)) {
+        $path = $possiblePath;
+
+        break;
+    }
+}
+
+if (! isset($path)) {
+    throw new \Exception("Could not find 'autoload.php'");
+}
+
+require_once $path;
 
 $application = new Application();
 $application->add($command = new ConvertCommand());
