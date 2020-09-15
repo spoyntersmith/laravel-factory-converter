@@ -9,7 +9,7 @@ This package allows to easily convert your 'classic' model factories to the Lara
 ## Installation
 
 ```
-composer global require rdh/laravel-factory-converter
+composer global require rdh/laravel-factory-converter:dev-master
 ```
 
 ## Usage
