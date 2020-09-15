@@ -24,3 +24,9 @@ laravel-factories-converter
 ## Options
 
 Check `laravel-factory-converter --help` for all options
+
+## To do
+
+- [ ] Add traits to models
+- [ ] Replace factories in tests (or other files like seeds)
+- [ ] Transform seeds (add namespace)
