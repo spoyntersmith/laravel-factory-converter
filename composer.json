@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
+        "friendsofphp/php-cs-fixer": "^2.16",
         "illuminate/collections": "^8.2",
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",

@@ -14,7 +14,9 @@ class FactoryFileConverter extends Converter
             'model'           => $factory->getModelBasename(),
             'imports'         => $factory->getImports(),
             'definition'      => $factory->getDefinition(),
-            'removeDocBlocks' => $this->input->getOption('without-doc-blocks'),
+            'removeDocBlocks' => (bool) $this->input->getOption('without-doc-blocks'),
         ]);
+
+        $this->format($path);
     }
 }

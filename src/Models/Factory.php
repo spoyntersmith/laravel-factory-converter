@@ -29,11 +29,14 @@ class Factory
 
     private function findModel(): void
     {
-        $this->model = \ltrim(\preg_replace('/.*\$factory->define\((.*)::class, function.*/s', '$1', $this->contents), '\\');
+        $model = \ltrim(\preg_replace('/.*\$factory->define\((.*)::class, function.*/s', '$1', $this->contents), '\\');
 
-        if (\mb_strpos($this->model, '\\') !== false) {
-            $this->imports->push('use ' . $this->model . ';');
+        if (\mb_strpos($model, '\\') === false) {
+            $model = (string) preg_replace('/.*use ([A-Za-z\\\]+' . $model . ');.*/s', '$1', $this->contents);
         }
+
+        $this->model = $model;
+        $this->imports->push('use ' . $this->model . ';');
     }
 
     private function findImports(): void

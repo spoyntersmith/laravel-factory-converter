@@ -21,5 +21,7 @@ class SeederConverter extends Converter
         $lines[$index] = 'namespace Database\\Seeders;' . str_repeat(PHP_EOL, 2) . $lines[$index];
 
         file_put_contents($file->getPathname(), $lines->implode(PHP_EOL));
+
+        $this->format($file->getPathname());
     }
 }

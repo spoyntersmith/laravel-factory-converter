@@ -42,26 +42,13 @@ class ConvertTest extends TestCase
         $commandTester = $this->runCommand();
 
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $this->assertEquals(
-            \file_get_contents($this->pathExpected . '/composer.json'),
-            \file_get_contents($this->pathActual . '/composer.json')
-        );
-        $this->assertEquals(
-            \file_get_contents($this->pathExpected . '/database/factories/UserFactory.php'),
-            \file_get_contents($this->pathActual . '/database/factories/UserFactory.php')
-        );
-        $this->assertEquals(
-            \file_get_contents($this->pathExpected . '/app/Models/User.php'),
-            \file_get_contents($this->pathActual . '/app/Models/User.php')
-        );
-        $this->assertEquals(
-            \file_get_contents($this->pathExpected . '/database/seeders/DatabaseSeeder.php'),
-            \file_get_contents($this->pathActual . '/database/seeders/DatabaseSeeder.php')
-        );
-        $this->assertEquals(
-            \file_get_contents($this->pathExpected . '/tests/ExampleClass.php'),
-            \file_get_contents($this->pathActual . '/tests/ExampleClass.php')
-        );
+        $this->assertFileContentsEquals('/composer.json');
+        $this->assertFileContentsEquals('/database/factories/PostFactory.php');
+        $this->assertFileContentsEquals('/database/factories/UserFactory.php');
+        $this->assertFileContentsEquals('/app/Models/Post.php');
+        $this->assertFileContentsEquals('/app/Models/User.php');
+        $this->assertFileContentsEquals('/database/seeders/DatabaseSeeder.php');
+        $this->assertFileContentsEquals('/tests/ExampleClass.php');
         $this->assertFileDoesNotExist($this->pathActual . '/database/old-factories');
     }
 
@@ -71,10 +58,7 @@ class ConvertTest extends TestCase
         $commandTester = $this->runCommand(['-w' => 1]);
 
         $this->assertEquals(0, $commandTester->getStatusCode());
-        $this->assertEquals(
-            \file_get_contents($this->pathActual . '/database/factories/UserFactory.php'),
-            \file_get_contents($this->pathExpected . '/database/factories/UserFactory-without-doc-blocks.php')
-        );
+        $this->assertFileContentsEquals('/database/factories/UserFactory-without-doc-blocks.php', '/database/factories/UserFactory.php');
     }
 
     /** @test */
@@ -87,11 +71,20 @@ class ConvertTest extends TestCase
         $this->assertGreaterThan(0, $commandTester->getStatusCode());
     }
 
+    private function assertFileContentsEquals(string $fileOne, string $fileTwo = null): void
+    {
+        $this->assertEquals(
+            \file_get_contents($this->pathExpected . $fileOne),
+            \file_get_contents($this->pathActual . ($fileTwo ?: $fileOne))
+        );
+    }
+
     private function runCommand(array $options = []): ApplicationTester
     {
         $options = \array_merge([
             'convert',
             '-d' => $this->pathActual,
+            '-a' => true,
         ], $options);
 
         $commandTester = new ApplicationTester($this->application);

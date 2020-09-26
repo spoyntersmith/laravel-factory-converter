@@ -2,6 +2,7 @@
 
 namespace Rdh\LaravelFactoryConverter\FileConverters;
 
+use Rdh\LaravelFactoryConverter\Process;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Templating\PhpEngine;
 
@@ -23,5 +24,14 @@ abstract class Converter
         if (! $result) {
             throw new \Exception('File not written: ' . $destination);
         }
+    }
+
+    protected function format(string $file): void
+    {
+        Process::run(sprintf(
+            'cd %s && php vendor/bin/php-cs-fixer fix %s --rules=@PSR2',
+            $this->input->getOption('directory'),
+            $file
+        ));
     }
 }

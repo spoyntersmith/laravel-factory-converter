@@ -5,6 +5,7 @@ namespace Rdh\LaravelFactoryConverter\Commands;
 use Rdh\LaravelFactoryConverter\Exceptions\ComposerJsonNotFoundException;
 use Rdh\LaravelFactoryConverter\Exceptions\FilesNotMovedException;
 use Rdh\LaravelFactoryConverter\FileConverters\FactoryFileConverter;
+use Rdh\LaravelFactoryConverter\FileConverters\FactoryFunctionConverter;
 use Rdh\LaravelFactoryConverter\FileConverters\ModelConverter;
 use Rdh\LaravelFactoryConverter\FileConverters\SeederConverter;
 use Rdh\LaravelFactoryConverter\Models\Factory;
@@ -24,6 +25,7 @@ class ConvertCommand extends Command
 {
     private PhpEngine $templateEngine;
     private FactoryFileConverter $factoryFileConverter;
+    private FactoryFunctionConverter $factoryFunctionConverter;
     private ModelConverter $modelConverter;
     private SeederConverter $seederConverter;
     private OutputInterface $output;
@@ -44,12 +46,14 @@ class ConvertCommand extends Command
         $this
             ->setName('convert')
             ->addOption('directory', '-d', InputOption::VALUE_OPTIONAL, 'Change the working directory', \getcwd())
-            ->addOption('without-doc-blocks', '-w', InputOption::VALUE_NONE, 'Without the doc blocks');
+            ->addOption('without-doc-blocks', '-w', InputOption::VALUE_NONE, 'Without the doc blocks')
+            ->addOption('apply-psr', '-a', InputOption::VALUE_NONE, 'Apply PSR code formatting');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->factoryFileConverter     = new FactoryFileConverter($input, $this->templateEngine);
+        $this->factoryFunctionConverter = new FactoryFunctionConverter($input, $this->templateEngine);
         $this->modelConverter           = new ModelConverter($input, $this->templateEngine);
         $this->seederConverter          = new SeederConverter($input, $this->templateEngine);
 
@@ -158,9 +162,7 @@ class ConvertCommand extends Command
             ->contains('factory(');
 
         foreach ($finder as $file) {
-            $contents = preg_replace('/(.*)factory\(([A-Za-z\\\]+)::class\)(.*)/', '$1$2::factory()$3', $file->getContents());
-
-            file_put_contents($file->getPathname(), $contents);
+            $this->factoryFunctionConverter->convert($file);
         }
     }
 

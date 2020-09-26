@@ -20,6 +20,8 @@ class ModelConverter extends Converter
             'imports'   => $this->findImports($contents),
             'contents'  => $this->findContents($contents),
         ]);
+
+        $this->format($path);
     }
 
     private function findExtends(string $contents): string
