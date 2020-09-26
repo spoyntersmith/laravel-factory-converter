@@ -55,7 +55,7 @@ class ConvertCommand extends Command
 
         $this->output                = $output;
         $this->directory             = (string) $input->getOption('directory');
-        $this->directoryOldFactories = \str_replace('//', '/', $this->directory . '/old-factories');
+        $this->directoryOldFactories = \str_replace('//', '/', $this->directory . '/database/old-factories');
 
         $this->updateComposerJson();
         $this->moveFiles();
@@ -78,7 +78,7 @@ class ConvertCommand extends Command
 
         $configuration = \json_decode(\file_get_contents($path), true);
         $keyFactories  = \array_search('database/factories', $configuration['autoload']['classmap'] ?? []);
-        $keySeeders    = \array_search('database/seeders', $configuration['autoload']['classmap'] ?? []);
+        $keySeeders    = \array_search('database/seeds', $configuration['autoload']['classmap'] ?? []);
 
         if ($keyFactories !== false) {
             unset($configuration['autoload']['classmap'][$keyFactories]);

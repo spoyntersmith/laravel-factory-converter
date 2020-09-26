@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Rdh\LaravelFactoryConverterTests;
 
@@ -10,25 +10,10 @@ use Symfony\Component\Process\Process;
 
 class ConvertTest extends TestCase
 {
-    /**
-     * @var Application
-     */
-    private $application;
-
-    /**
-     * @var false|string
-     */
-    private $pathOriginal;
-
-    /**
-     * @var false|string
-     */
-    private $pathActual;
-
-    /**
-     * @var false|string
-     */
-    private $pathExpected;
+    private Application $application;
+    private string $pathOriginal;
+    private string $pathActual;
+    private string $pathExpected;
 
     protected function setUp(): void
     {
@@ -57,6 +42,10 @@ class ConvertTest extends TestCase
         $commandTester = $this->runCommand();
 
         $this->assertEquals(0, $commandTester->getStatusCode());
+        $this->assertEquals(
+            \file_get_contents($this->pathExpected . '/composer.json'),
+            \file_get_contents($this->pathActual . '/composer.json')
+        );
         $this->assertEquals(
             \file_get_contents($this->pathExpected . '/database/factories/UserFactory.php'),
             \file_get_contents($this->pathActual . '/database/factories/UserFactory.php')

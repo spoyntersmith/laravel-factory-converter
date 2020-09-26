@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Rdh\LaravelFactoryConverter\Models;
 
@@ -32,7 +32,7 @@ class Factory
         $this->model = \ltrim(\preg_replace('/.*\$factory->define\((.*)::class, function.*/s', '$1', $this->contents), '\\');
 
         if (\mb_strpos($this->model, '\\') !== false) {
-            $this->imports->push(['use ' . $this->model . ';']);
+            $this->imports->push('use ' . $this->model . ';');
         }
     }
 
