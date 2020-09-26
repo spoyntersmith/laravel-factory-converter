@@ -8,6 +8,7 @@ This package allows to easily convert your 'classic' model factories to the Lara
 * Your models are in the `App` namespace (`app` directory)
 * There is no namespace defined in your seeders
 * Your code is PSR-2 (ish) formatted
+* Start without any changes in your repository (make a backup if you don't use version control)
 
 ## Installation
 
@@ -27,7 +28,3 @@ laravel-factories-converter
 ## Options
 
 Check `laravel-factory-converter --help` for all options
-
-## To do
-
-- [ ] Transform seeds (add namespace)
