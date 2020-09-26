@@ -1,0 +1,20 @@
+<?php
+
+namespace Rdh\LaravelFactoryConverter\FileConverters;
+
+use Rdh\LaravelFactoryConverter\Models\Factory;
+
+class FactoryFileConverter extends Converter
+{
+    public function convert(Factory $factory): void
+    {
+        $path = $this->input->getOption('directory') . '/database/factories/' . $factory->getModelBasename() . 'Factory.php';
+
+        $this->write($path, 'factory.php', [
+            'model'           => $factory->getModelBasename(),
+            'imports'         => $factory->getImports(),
+            'definition'      => $factory->getDefinition(),
+            'removeDocBlocks' => $this->input->getOption('without-doc-blocks'),
+        ]);
+    }
+}

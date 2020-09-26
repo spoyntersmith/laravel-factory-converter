@@ -10,12 +10,13 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
+        "illuminate/collections": "^8.2",
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
-        "symfony/templating": "^5.1",
-        "symfony/process": "^5.1"
+        "symfony/process": "^5.1",
+        "symfony/templating": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",

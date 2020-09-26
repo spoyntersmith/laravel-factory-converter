@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Client;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ClientFactory extends Factory
+class UserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Client::class;
+    protected $model = User::class;
 
     /**
      * Define the model's default state.
@@ -22,11 +22,9 @@ class ClientFactory extends Factory
     public function definition()
     {
         return [
-            'company'  => $this->faker->company,
-            'email'    => $this->faker->safeEmail,
-            'address'  => $this->faker->address,
-            'postcode' => $this->faker->postcode,
-            'city'     => $this->faker->city,
+            'email'          => $this->faker->unique()->safeEmail,
+            'password'       => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'remember_token' => \Illuminate\Support\Str::random(10),
         ];
     }
 }

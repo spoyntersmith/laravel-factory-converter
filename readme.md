@@ -4,7 +4,10 @@ This package allows to easily convert your 'classic' model factories to the Lara
 
 ## Requirements
 
-* PHP 7.3
+* PHP 7.4
+* Your models are in the `App` namespace (`app` directory)
+* There is no namespace defined in your seeders
+* Your code is PSR-2 (ish) formatted
 
 ## Installation
 
@@ -14,7 +17,7 @@ composer global require rdh/laravel-factory-converter:dev-master
 
 ## Usage
 
-Make sure that `~/.composer/vendor/bin` is in your `$PATH`. Run the following command from within your project:
+Make sure that `~/.composer/vendor/bin` is in your `$PATH`. Run the following commands for your project:
 
 ```
 cd your-project
@@ -27,6 +30,4 @@ Check `laravel-factory-converter --help` for all options
 
 ## To do
 
-- [ ] Add traits to models
-- [ ] Replace factories in tests (or other files like seeds)
 - [ ] Transform seeds (add namespace)

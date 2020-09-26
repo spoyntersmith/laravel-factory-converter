@@ -23,7 +23,7 @@ class ConvertTest extends TestCase
     /**
      * @var false|string
      */
-    private $pathResult;
+    private $pathActual;
 
     /**
      * @var false|string
@@ -34,16 +34,16 @@ class ConvertTest extends TestCase
     {
         parent::setUp();
 
-        $this->pathOriginal = \realpath(__DIR__ . '/../tests/stubs/original');
-        $this->pathResult   = \realpath(__DIR__ . '/../tests/stubs/result');
-        $this->pathExpected = \realpath(__DIR__ . '/../tests/stubs/expected');
+        $this->pathOriginal = \realpath(__DIR__ . '/../tests/playground/original');
+        $this->pathActual   = \realpath(__DIR__ . '/../tests/playground/actual');
+        $this->pathExpected = \realpath(__DIR__ . '/../tests/playground/expected');
 
-        if (! $this->pathOriginal || ! $this->pathResult || ! $this->pathExpected) {
-            throw new \Exception('One of the paths are incorrect');
+        if (! $this->pathOriginal || ! $this->pathActual || ! $this->pathExpected) {
+            throw new \Exception('One of the paths is incorrect');
         }
 
-        Process::fromShellCommandline(\sprintf('rm -rf %s', $this->pathResult . '/*'))->run();
-        Process::fromShellCommandline(\sprintf('cp -R %s %s', $this->pathOriginal . '/*', $this->pathResult))->run();
+        Process::fromShellCommandline(\sprintf('rm -rf %s', $this->pathActual . '/*'))->run();
+        Process::fromShellCommandline(\sprintf('cp -R %s %s', $this->pathOriginal . '/*', $this->pathActual))->run();
 
         $this->application = new Application();
         $this->application->add($command = new ConvertCommand());
@@ -58,19 +58,22 @@ class ConvertTest extends TestCase
 
         $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertEquals(
-            \file_get_contents($this->pathResult . '/database/factories/ClientFactory.php'),
-            \file_get_contents($this->pathExpected . '/database/factories/ClientFactory.php')
+            \file_get_contents($this->pathExpected . '/database/factories/UserFactory.php'),
+            \file_get_contents($this->pathActual . '/database/factories/UserFactory.php')
         );
-        $this->assertFileDoesNotExist($this->pathResult . '/database/factories-old/ClientFactory.php');
-    }
-
-    /** @test */
-    public function canConvertAndKeepOldFiles(): void
-    {
-        $commandTester = $this->runCommand(['-kof' => 1]);
-
-        $this->assertEquals(0, $commandTester->getStatusCode());
-        $this->assertFileExists($this->pathResult . '/database/factories-old/ClientFactory.php');
+        $this->assertEquals(
+            \file_get_contents($this->pathExpected . '/app/Models/User.php'),
+            \file_get_contents($this->pathActual . '/app/Models/User.php')
+        );
+        $this->assertEquals(
+            \file_get_contents($this->pathExpected . '/database/seeders/DatabaseSeeder.php'),
+            \file_get_contents($this->pathActual . '/database/seeders/DatabaseSeeder.php')
+        );
+        $this->assertEquals(
+            \file_get_contents($this->pathExpected . '/tests/ExampleClass.php'),
+            \file_get_contents($this->pathActual . '/tests/ExampleClass.php')
+        );
+        $this->assertFileDoesNotExist($this->pathActual . '/database/old-factories');
     }
 
     /** @test */
@@ -80,26 +83,15 @@ class ConvertTest extends TestCase
 
         $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertEquals(
-            \file_get_contents($this->pathResult . '/database/factories/ClientFactory.php'),
-            \file_get_contents($this->pathExpected . '/database/factories/ClientFactory-without-doc-blocks.php')
+            \file_get_contents($this->pathActual . '/database/factories/UserFactory.php'),
+            \file_get_contents($this->pathExpected . '/database/factories/UserFactory-without-doc-blocks.php')
         );
-    }
-
-    /** @test */
-    public function cannotConvertWithExistingSyntaxErrors(): void
-    {
-        $path = $this->pathResult . '/database/factories/ClientFactory.php';
-        \file_put_contents($path, \mb_substr(\file_get_contents($path), 0, -8));
-
-        $commandTester = $this->runCommand();
-
-        $this->assertGreaterThan(0, $commandTester->getStatusCode());
     }
 
     /** @test */
     public function cannotConvertWithMissingComposerJson(): void
     {
-        \unlink($this->pathResult . '/composer.json');
+        \unlink($this->pathActual . '/composer.json');
 
         $commandTester = $this->runCommand();
 
@@ -110,7 +102,7 @@ class ConvertTest extends TestCase
     {
         $options = \array_merge([
             'convert',
-            '-d' => $this->pathResult,
+            '-d' => $this->pathActual,
         ], $options);
 
         $commandTester = new ApplicationTester($this->application);
