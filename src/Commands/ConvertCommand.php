@@ -22,40 +22,13 @@ use Symfony\Component\Templating\TemplateNameParser;
 
 class ConvertCommand extends Command
 {
-    /**
-     * @var PhpEngine
-     */
-    private $templateEngine;
-
-    /**
-     * @var FactoryFileConverter
-     */
-    private $factoryFileConverter;
-
-    /**
-     * @var ModelConverter
-     */
-    private $modelConverter;
-
-    /**
-     * @var SeederConverter
-     */
-    private $seederConverter;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * @var string
-     */
-    private $directory;
-
-    /**
-     * @var string
-     */
-    private $directoryOldFactories;
+    private PhpEngine $templateEngine;
+    private FactoryFileConverter $factoryFileConverter;
+    private ModelConverter $modelConverter;
+    private SeederConverter $seederConverter;
+    private OutputInterface $output;
+    private string $directory;
+    private string $directoryOldFactories;
 
     public function __construct()
     {
@@ -81,7 +54,7 @@ class ConvertCommand extends Command
         $this->seederConverter          = new SeederConverter($input, $this->templateEngine);
 
         $this->output                = $output;
-        $this->directory             = $input->getOption('directory');
+        $this->directory             = (string) $input->getOption('directory');
         $this->directoryOldFactories = \str_replace('//', '/', $this->directory . '/old-factories');
 
         $this->updateComposerJson();

@@ -7,15 +7,8 @@ use Symfony\Component\Templating\PhpEngine;
 
 abstract class Converter
 {
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-
-    /**
-     * @var PhpEngine
-     */
-    protected $templateEngine;
+    protected InputInterface $input;
+    protected PhpEngine $templateEngine;
 
     public function __construct(InputInterface $input, PhpEngine $templateEngine)
     {

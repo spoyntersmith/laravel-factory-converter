@@ -7,25 +7,10 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Factory
 {
-    /**
-     * @var string
-     */
-    private $contents;
-
-    /**
-     * @var string
-     */
-    private $model;
-
-    /**
-     * @var Collection
-     */
-    private $imports;
-
-    /**
-     * @var string
-     */
-    private $definition;
+    private string $contents;
+    private string $model;
+    private Collection $imports;
+    private string $definition;
 
     public static function fromFile(SplFileInfo $file): self
     {
@@ -35,6 +20,7 @@ class Factory
     private function __construct(SplFileInfo $file)
     {
         $this->contents = $file->getContents();
+        $this->imports  = collect();
 
         $this->findModel();
         $this->findImports();
@@ -46,7 +32,7 @@ class Factory
         $this->model = \ltrim(\preg_replace('/.*\$factory->define\((.*)::class, function.*/s', '$1', $this->contents), '\\');
 
         if (\mb_strpos($this->model, '\\') !== false) {
-            $this->imports = collect(['use ' . $this->model . ';']);
+            $this->imports->push(['use ' . $this->model . ';']);
         }
     }
 
