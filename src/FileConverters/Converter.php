@@ -28,10 +28,6 @@ abstract class Converter
 
     protected function format(string $file): void
     {
-        Process::run(sprintf(
-            'cd %s && php vendor/bin/php-cs-fixer fix %s --rules=@PSR2',
-            $this->input->getOption('directory'),
-            $file
-        ));
+        Process::run(sprintf('php vendor/bin/php-cs-fixer fix %s --rules=@Symfony', $file));
     }
 }

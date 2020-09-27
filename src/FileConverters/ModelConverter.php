@@ -11,40 +11,40 @@ class ModelConverter extends Converter
         $path = $this->input->getOption('directory')
             .  '/' . \str_replace(['\\', 'App/'], ['/', 'app/'], $factory->getModel())
             . '.php';
-        $contents = \file_get_contents($path);
 
-        $this->write($path, 'model.php', [
-            'namespace' => $factory->getModelNamespace(),
-            'model'     => $factory->getModelBasename(),
-            'extends'   => $this->findExtends($contents),
-            'imports'   => $this->findImports($contents),
-            'contents'  => $this->findContents($contents),
-        ]);
+        $this->format($path);
+
+        $contents = \file_get_contents($path);
+        $contents = $this->addImport($contents);
+        $contents = $this->addTrait($contents);
+
+        \file_put_contents($path, $contents);
 
         $this->format($path);
     }
 
-    private function findExtends(string $contents): string
+    private function addImport(string $contents): string
     {
-        return \preg_replace('/.*class[A-Za-z \n\r]+extends ([A-Za-z\\\]+).*/s', '$1', $contents);
+        $lines = collect(\explode(PHP_EOL, $contents));
+        $index = $lines->search(function ($line) {
+            if (strpos($line, 'use ') === 0) {
+                return true;
+            }
+
+            return strpos($line, 'class') === 0;
+        });
+
+        $lines[$index] = $lines[$index] . PHP_EOL . 'use Illuminate\Database\Eloquent\Factories\HasFactory;';
+
+        return $lines->implode(PHP_EOL);
     }
 
-    private function findImports(string $contents): array
+    private function addTrait(string $contents): string
     {
-        $imports = \preg_replace('/^<\?php.*namespace[ A-Za-z\\\]+;\s+(.*)class.*/s', '$1', $contents);
-
-        return collect(\explode(PHP_EOL, $imports))
-            ->filter()
-            ->merge(['use Illuminate\Database\Eloquent\Factories\HasFactory;'])
-            ->sort()
-            ->toArray();
-    }
-
-    private function findContents(string $contents): string
-    {
-        $contents = \preg_replace('/.*\{' . PHP_EOL . '?(.*)' . PHP_EOL . '?}/s', '$1', $contents);
-        $contents = \trim($contents, PHP_EOL);
-
-        return $contents . PHP_EOL;
+        return \preg_replace(
+            '/(.*)(class .*{)(.*)/sU',
+            '$1$2' . PHP_EOL . '    use HasFactory;' . PHP_EOL . '$3',
+            $contents
+        );
     }
 }
