@@ -68,11 +68,6 @@ class Factory
         return $this->model;
     }
 
-    public function getModelNamespace(): string
-    {
-        return substr($this->model, 0, strrpos($this->model, '\\'));
-    }
-
     public function getModelBasename(): string
     {
         return \preg_replace('/.*\\\([A-Za-z]+)/', '$1', $this->model);

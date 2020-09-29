@@ -63,6 +63,7 @@ class ConvertCommand extends Command
 
         $this->updateComposerJson();
         $this->moveFiles();
+        $this->createDirectories();
         $this->convertFactoriesAndModels();
         $this->convertFactoryFunctions();
         $this->convertSeeders();
@@ -100,8 +101,8 @@ class ConvertCommand extends Command
             unset($configuration['autoload']);
         }
 
-        $configuration['autoload']['psr-4']['Database\\Factories\\'] = 'database/factories/';
-        $configuration['autoload']['psr-4']['Database\\Seeder\\'] = 'database/seeders/';
+        $configuration['autoload']['psr-4']['Database\\Factories\\'] = 'database/Factories/';
+        $configuration['autoload']['psr-4']['Database\\Seeders\\'] = 'database/Seeders/';
 
         \file_put_contents($path, \str_replace('\/', '/', \json_encode($configuration, JSON_PRETTY_PRINT)));
     }
@@ -125,15 +126,23 @@ class ConvertCommand extends Command
         Process::run(\sprintf('mkdir -p %s', $this->directory . '/database/factories/'));
     }
 
+    protected function createDirectories(): void
+    {
+        $this->output->writeLn('3. Create directories');
+
+        Process::run(\sprintf('mkdir %s', $this->directory . '/database/Factories'));
+        Process::run(\sprintf('mkdir %s', $this->directory . '/database/Seeders'));
+    }
+
     protected function convertFactoriesAndModels(): void
     {
-        $this->output->writeLn(\sprintf('3. Converting files from %s to %s', $this->directoryOldFactories, $this->directory . '/database/factories'));
+        $this->output->writeLn(\sprintf('4. Converting files from %s to %s', $this->directoryOldFactories, $this->directory . '/database/Factories'));
 
         foreach ($this->files($this->directoryOldFactories) as $file) {
             $this->convertFactoryAndModel($file);
         }
 
-        $this->output->writeLn('4. Deleting old factories');
+        $this->output->writeLn('5. Deleting old factories');
 
         Process::run(\sprintf('rm -rf %s', $this->directoryOldFactories));
     }
@@ -150,7 +159,7 @@ class ConvertCommand extends Command
 
     protected function convertFactoryFunctions()
     {
-        $this->output->writeLn('5. Converting factory functions');
+        $this->output->writeLn('6. Converting factory functions');
 
         $finder = (new Finder())
             ->in([
@@ -168,7 +177,7 @@ class ConvertCommand extends Command
 
     protected function convertSeeders(): void
     {
-        $this->output->writeLn('6. Converting seeders');
+        $this->output->writeLn('7. Converting seeders');
 
         Process::run(\sprintf('mv %s %s', $this->directory . '/database/seeds', $this->directory . '/database/seeders'));
 

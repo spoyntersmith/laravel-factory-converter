@@ -43,11 +43,11 @@ class ConvertTest extends TestCase
 
         $this->assertEquals(0, $commandTester->getStatusCode());
         $this->assertFileContentsEquals('/composer.json');
-        $this->assertFileContentsEquals('/database/factories/PostFactory.php');
-        $this->assertFileContentsEquals('/database/factories/UserFactory.php');
+        $this->assertFileContentsEquals('/database/Factories/PostFactory.php');
+        $this->assertFileContentsEquals('/database/Factories/UserFactory.php');
         $this->assertFileContentsEquals('/app/Models/Post.php');
         $this->assertFileContentsEquals('/app/Models/User.php');
-        $this->assertFileContentsEquals('/database/seeders/DatabaseSeeder.php');
+        $this->assertFileContentsEquals('/database/Seeders/DatabaseSeeder.php');
         $this->assertFileContentsEquals('/tests/ExampleClass.php');
         $this->assertFileDoesNotExist($this->pathActual . '/database/old-factories');
     }
