@@ -23,7 +23,7 @@ Make sure that `~/.composer/vendor/bin` is in your `$PATH`. Run the following co
 
 ```
 cd your-project
-laravel-factories-converter
+laravel-factory-converter
 ```
 
 ## Options
